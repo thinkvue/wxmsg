@@ -214,7 +214,7 @@ wget http://cdn.thinkvue.cn/thinkvue.wxmsg.1.0.5.tar.gz
 echo -e "\033[32m下载压缩包完成。\n \033[0m" 
 echo "压缩包解压..."
 mkdir /www/wwwroot/thinkvue.wxmsg/
-tar -zxvf thinkvue.wxmsg.1.0.5.tar.gz -C /www/wwwroot/
+tar -zxvf thinkvue.wxmsg.1.0.5.tar.gz -C /www/wwwroot/ >/dev/null
 echo -e "\033[32m压缩包解压完成。\n \033[0m" 
 echo "压缩包解压..."
 # 安装PHP第三方依赖
@@ -471,7 +471,9 @@ chmod +x ./run.sh
 # 启动python3后台服务 每两小时启动一次 程序中限制了唯一实例，因此不会重复运行 只是防止意外挂掉
 sudo yum install crontabs
 sudo /sbin/service crond start
-crontab -l > conf
+if [ ! -d "/var/spool/cron/root" ]; then
+  echo "" >/var/spool/cron/root
+fi
 crontab -l > conf && echo "*/5 * * * * $pathpy/run.sh >> $pathpy/run.log" >> conf && crontab conf && rm -f conf
 echo -e "\033[32m添加定时任务完成！\n \033[0m"
 echo -e "\033[32m安装完成\n \033[0m" 
