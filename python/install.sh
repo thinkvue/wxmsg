@@ -210,11 +210,11 @@ rm -rf ./thinkvue.wxms*
 rm -rf /www/wwwroot/thinkvue.wxmsg/
 echo.
 echo "下载thinkvue.wxmsg压缩包..."
-wget http://cdn.thinkvue.cn/thinkvue.wxmsg.1.0.4.tar.gz
+wget http://cdn.thinkvue.cn/thinkvue.wxmsg.1.0.5.tar.gz
 echo -e "\033[32m下载压缩包完成。\n \033[0m" 
 echo "压缩包解压..."
 mkdir /www/wwwroot/thinkvue.wxmsg/
-tar -zxvf thinkvue.wxmsg.1.0.4.tar.gz -C /www/wwwroot/
+tar -zxvf thinkvue.wxmsg.1.0.5.tar.gz -C /www/wwwroot/
 echo -e "\033[32m压缩包解压完成。\n \033[0m" 
 echo "压缩包解压..."
 # 安装PHP第三方依赖

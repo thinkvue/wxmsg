@@ -35,15 +35,15 @@
 
 ### Centos安装命令
 
-`yum install -y wget && wget -O install_1.0.4.sh http://api.thinkvue.cn/install_1.0.4.sh && sudo sh install_1.0.4.sh`
+`yum install -y wget && wget -O install_1.0.5.sh http://api.thinkvue.cn/install_1.0.5.sh && sudo sh install_1.0.5.sh`
 
 ### Ubuntu/Deepin安装命令
 
-`wget -O install_1.0.4.sh http://api.thinkvue.cn/install_1.0.4.sh && sudo bash install_1.0.4.sh`
+`wget -O install_1.0.5.sh http://api.thinkvue.cn/install_1.0.5.sh && sudo bash install_1.0.5.sh`
 
 ### Debian安装命令
 
-`wget -O install_1.0.4.sh http://api.thinkvue.cn/install_1.0.4.sh && bash install_1.0.4.sh`
+`wget -O install_1.0.5.sh http://api.thinkvue.cn/install_1.0.5.sh && bash install_1.0.5.sh`
 
 
 ## 安装后配置
