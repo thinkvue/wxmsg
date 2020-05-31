@@ -1,3 +1,12 @@
+<!--
+ * @Author: thinkvue@thinkvue.cn
+ * @URL: https://thinkvue.com
+ * @Date: 2020-05-30 16:51:45
+ * @LastEditors: thinkvue@thinkvue.cn
+ * @LastEditTime: 2020-05-31 12:38:00
+ * @FilePath: \\github\\README.md
+ * @Description:  
+--> 
 
 # WxMsg微信消息推送
 
@@ -53,7 +62,7 @@
 - [如何设置微信公众号模版消息](./md/template_id.md)
 
 
-## 效果图
+## 效果图 
 
 **一键安装**
 
