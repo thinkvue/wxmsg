@@ -107,7 +107,7 @@ if [ $? -ne 0 ]; then
 	echo "切换为国内镜像..."
 	composer config -g repo.packagist composer https://packagist.phpcomposer.com
 	# 更新 composer：
-	composer selfupdate
+	# composer selfupdate
 	rm -rf composer-setup.php
 	echo -e "\033[32m安装composer完成！\n \033[0m" 
 else
@@ -469,7 +469,10 @@ echo "cd $pathpy" >./run.sh
 echo 'python3 main.py' >>./run.sh
 chmod +x ./run.sh
 # 启动python3后台服务 每两小时启动一次 程序中限制了唯一实例，因此不会重复运行 只是防止意外挂掉
-# crontab -l > conf && echo "1 */2 * * * $pathpy/run.sh >> $pathpy/run.log" >> conf && crontab conf && rm -f conf
+sudo yum install crontabs
+sudo /sbin/service crond start
+crontab -l > conf
+crontab -l > conf && echo "*/5 * * * * $pathpy/run.sh >> $pathpy/run.log" >> conf && crontab conf && rm -f conf
 echo -e "\033[32m添加定时任务完成！\n \033[0m"
 echo -e "\033[32m安装完成\n \033[0m" 
 

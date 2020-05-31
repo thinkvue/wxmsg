@@ -2,7 +2,7 @@
  :Author: MiDoFa
  :Date: 2019-07-30 07:58:52
  :LastEditors: thinkvue@thinkvue.cn
- :LastEditTime: 2020-05-30 23:50:35
+ :LastEditTime: 2020-05-31 18:39:19
  :Description: 项目描述
 """
 
@@ -88,7 +88,7 @@ def spider_list():
     while True:
         if not msg:
             log.log_exception(20, "消息队列中没有数据。")
-            time.sleep(2)
+            time.sleep(1)
             msg=db.select_msg()
         else:
             if not msg.get('appid') or not msg.get('appsecret'):

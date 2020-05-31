@@ -65,6 +65,16 @@
 ![运行效果图](./md/img/preview.jpg)
 
 
+# 使用方法
 
-## 开源许可
+搭建好后，请求API请参详【[API地址直达链接](https://thinkvue.cn/api/)】，把域名换成你的即可。  
+  
+你也可以直接使用我搭建好的：
+
+**关注微信公众号【ThinkVue】，API参详【[API地址直达链接](https://thinkvue.cn/api/)】。公众号扫码直达：**
+
+![微信公众号ThinkVue](./md/img/thinkvue.jpg)
+
+
+# 开源许可
 [MIT](./LICENSE.txt)
