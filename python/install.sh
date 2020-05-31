@@ -5,6 +5,11 @@
 # @LastEditors: lijian@midofa.com
 # @Description: 项目描述
 
+#!/bin/bash
+PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:~/bin
+export PATH
+LANG=en_US.UTF-8
+
 # 打印安装须知
 total_steps=13
 step=1
@@ -108,13 +113,7 @@ if [ $? -ne 0 ]; then
 else
 	echo -e "\033[32mcomposer检测通过！\n \033[0m" 
 fi
-# 安装PHP第三方依赖
-echo "安装php第三方依赖模块..."
-atPath=$(basename `pwd`)
-cd ..
-composer i
-cd $atPath
-echo -e "\033[32m安装composer和第三方依赖模块成功！\n \033[0m" 
+
 
 # 检测是否安装python3
 step=`expr $step + 1`
@@ -125,8 +124,9 @@ which "python3" >/dev/null 2>&1
 # 如果没有安装则安装之
 if [ $? -ne 0 ]; then
 	# 安装编译环境
+	rm -rf Python-3.8.*
 	echo "python3未安装，现在开始安装python3"
-	echo "开始安装编译环境...\n"
+	echo "开始安装编译环境..."
 	sudo yum -y groupinstall "Development tools"
 	# 安装依赖包
 	sudo yum -y install zlib-devel bzip2-devel openssl-devel ncurses-devel sqlite-devel readline-devel tk-devel gdbm-devel db4-devel libpcap-devel xz-devel libffi-devel
@@ -134,9 +134,10 @@ if [ $? -ne 0 ]; then
 	# 获取Python3.8.2安装包
 	echo "获取Python3.8.2安装包...\n"
 	# wget https://www.python.org/ftp/python/3.8.2/Python-3.8.2.tgz
+	wget http://cdn.thinkvue.cn/Python-3.8.2.tgz
 	echo -e "\033[32m下载Python3.8.2安装包完成!\n \033[0m"
 	# 解压安装包
-	echo "解压安装包...\n"
+	echo "解压安装包..."
 	tar -zxvf Python-3.8.2.tgz
 	echo -e "\033[32m解压安装包完成!\n \033[0m"
 	# 切换到安装包目录
@@ -146,7 +147,7 @@ if [ $? -ne 0 ]; then
 	# 配置Python3的安装目录
 	./configure --prefix=/usr/local/bin/python3
 	# 编译安装 Python3 
-	echo "编译安装Python-3.8.2...\n"
+	echo "编译安装Python-3.8.2..."
 	sudo make && make install
 	cd ..
 	echo -e "\033[32m编译安装完成!\n \033[0m"
@@ -200,11 +201,29 @@ echo 'six==1.13.0' >>packages.txt
 echo 'urllib3==1.25.8' >>packages.txt
 echo 'wrapt==1.11.2' >>packages.txt
 echo 'XlsxWriter==1.2.7' >>packages.txt
+echo 'aliyun-python-sdk-core==2.13.16' >>packages.txt
 pip3 install -r packages.txt --trusted-host mirrors.aliyun.com >/dev/null
 echo -e "\033[32m安装依赖包完成😘 \n \033[0m" 
 # 清除临时文件
 rm -rf ./packages.txt
-
+rm -rf ./thinkvue.wxms*
+rm -rf /www/wwwroot/thinkvue.wxmsg/
+echo.
+echo "下载thinkvue.wxmsg压缩包..."
+wget http://cdn.thinkvue.cn/thinkvue.wxmsg.1.0.4.tar.gz
+echo -e "\033[32m下载压缩包完成。\n \033[0m" 
+echo "压缩包解压..."
+mkdir /www/wwwroot/thinkvue.wxmsg/
+tar -zxvf thinkvue.wxmsg.1.0.4.tar.gz -C /www/wwwroot/
+echo -e "\033[32m压缩包解压完成。\n \033[0m" 
+echo "压缩包解压..."
+# 安装PHP第三方依赖
+echo "安装php第三方依赖模块..."
+cd /www/wwwroot/thinkvue.wxmsg/
+sudo /bin/composer self-update
+composer install
+cd python
+echo -e "\033[32m安装composer和第三方依赖模块成功！\n \033[0m" 
 
 # 配置数据库
 step=`expr $step + 1`
@@ -257,6 +276,7 @@ while true
 do
     read -p "请输入微信公众号的appID: " appID1
     read -p "请输入微信公众号的appsecret: " appsecret1
+	read -p "请输入微信公众号的模板消息ID: " wechat_template_id1
     has_error=`expr $has_error + 1`
     if [[ -z "$appID1" || -z "$appsecret1" ]]; then
         echo -e "\033[31m \nappId和appsecret不可为空，请重新输入(退出脚本请按Ctrl+C)\n \033[0m"
@@ -276,8 +296,11 @@ do
 done
 appID2=''
 appsecret2=''
+wechat_template_id2=""
 appID3=''
 appsecret3=''
+wechat_template_id3=""
+
 
 # 配置错误邮箱
 step=`expr $step + 1`
@@ -325,24 +348,49 @@ ali_signname=""
 ali_verify_templatecode=""
 sms_interface_type=""
 has_error=0
+while true
+do
+	echo -e "\033[33m\n请选择短信接口：\n\033[0m"
+	echo "1. 阿里云"
+	echo "2. 短信宝"
+	read -p "请选择（默认1）: " asset
+	if [[ $asset = "2" ]];then
+		sms_interface_type="2"
+		read -p "请输入短信宝用户名: " smsbao_username
+		read -p "请输入短信宝密码(MD5加密保存): " smsbao_password
+		read -p "请输入短信宝验证码短信模板内容: " smsbao_verify_sms_content
+		smsbao_password=`echo -n $smsbao_password | md5sum | cut -d ' ' -f 1;`
+		ali_accesskeyid=$smsbao_username
+		ali_accesssecret=$smsbao_password
+		ali_signname=$smsbao_verify_sms_content
+		ali_verify_templatecode="8888"
+	else
+		sms_interface_type="1"
+		read -p "请输入阿里云短信accessKeyId: " ali_accesskeyid
+		read -p "请输入阿里云短信AccessSecret: " ali_accesssecret
+		read -p "请输入阿里云短信签名: " ali_signname
+		read -p "请输入阿里云验证码短信模板ID: " ali_verify_templatecode
+	fi
+	read -p "请输入接收短信的测试手机号: " mobile
+    has_error=`expr $has_error + 1`
+    if [[ -z "$ali_accesskeyid" || -z "$ali_accesssecret" || -z "$ali_signname" || -z "$ali_verify_templatecode" ]]; then
+        echo -e "\033[31m \n各项不可为空，请重新输入(退出脚本请按Ctrl+C)\n \033[0m"
+    else
+        echo "尝试发送测试短信..."
+		python3 test_db.py -a msg test_db.py -I "$sms_interface_type" -M "$mobile" -K "$ali_accesskeyid" -S "$ali_accesssecret" -N "$ali_signname" -T "$ali_verify_templatecode"
+        if [ $? -eq 0 ]; then
+            break
+        else
+            if [ $has_error -ge 3 ]; then
+                echo -e "\033[31m \n尝试次数过多，请核对配置，脚本终止。\n \033[0m"
+                exit 1
+            fi
+            echo -e "\033[31m \n短信接口测试失败，请重新输入(退出脚本请按Ctrl+C)\n \033[0m"
+        fi
+    fi
+done
+echo -e "\033[32m \n配置短信接口成功！\n \033[0m"
 
-echo -e "\033[33m\n请选择短信接口：\n\033[0m"
-echo "1. 阿里云"
-echo "2. 短信宝"
-echo -e "\033[33m\n请注意：短信接口不会测试连通性，请自行确认。\033[0m"
-read -p "请选择（默认1）: " asset
-if [[ $asset = "2" ]];then
-	# sms_interface_type="2"
-	read -p "请输入短信宝用户名: " smsbao_username
-	read -p "请输入短信宝密码: " smsbao_password
-	read -p "请输入短信宝验证码短信模板内容: " smsbao_verify_sms_content
-else
-	# sms_interface_type="1"
-	read -p "请输入阿里云短信accessKeyId: " ali_accesskeyid
-	read -p "请输入阿里云短信AccessSecret: " ali_accesssecret
-	read -p "请输入阿里云短信签名: " ali_signname
-	read -p "请输入阿里云验证码短信模板ID: " ali_verify_templatecode
-fi
 
 # 配置域名
 step=`expr $step + 1`
@@ -359,45 +407,48 @@ echo -e "\033[4;32m$step\033[0m/\033[0;35m$total_steps \033[34m生成配置文�
 echo "================================"
 # 配置php数据库
 echo "生成thinkphp数据库配置文件..."
-sed "s# <host># $host# g" -i ../config/database.php
-sed "s# <port># $port# g" -i ../config/database.php
-sed "s# <username># $username# g" -i ../config/database.php
-sed "s# <password># $password# g" -i ../config/database.php
-sed "s# <dbname># $dbname# g" -i ../config/database.php
+sed "s#<host>#$host#g" -i ../config/database.php
+sed "s#<port>#$port#g" -i ../config/database.php
+sed "s#<username>#$username#g" -i ../config/database.php
+sed "s#<password>#$password#g" -i ../config/database.php
+sed "s#<dbname>#$dbname#g" -i ../config/database.php
 # python3服务配置
 echo "生成python服务配置文件..."
-sed "s# <mail_from># $mail_from# g" -i ./config.ini
-sed "s# <mail_to># $mail_to# g" -i ./config.ini
-sed "s# <mail_host># $mail_host# g" -i ./config.ini
-sed "s# <mail_port># $mail_port# g" -i ./config.ini
-sed "s# <mail_pass># $mail_pass# g" -i ./config.ini
-sed "s# <host># $host# g" -i ./config.ini
-sed "s# <port># $port# g" -i ./config.ini
-sed "s# <username># $username# g" -i ./config.ini
-sed "s# <password># $password# g" -i ./config.ini
-sed "s# <dbname># $dbname# g" -i ./config.ini
+sed "s#<mail_from>#$mail_from#g" -i ./config.ini
+sed "s#<mail_to>#$mail_to#g" -i ./config.ini
+sed "s#<mail_host>#$mail_host#g" -i ./config.ini
+sed "s#<mail_port>#$mail_port#g" -i ./config.ini
+sed "s#<mail_pass>#$mail_pass#g" -i ./config.ini
+sed "s#<host>#$host#g" -i ./config.ini
+sed "s#<port>#$port#g" -i ./config.ini
+sed "s#<username>#$username#g" -i ./config.ini
+sed "s#<password>#$password#g" -i ./config.ini
+sed "s#<dbname>#$dbname#g" -i ./config.ini
 # 前台配置
 echo "配置前台接口..."
-sed "s# <api_url># $api_url# g" -i ../app/static/js/index.da425c07.js
-sed "s# <appID1># $appID1# g" -i ../app/static/js/index.da425c07.js
-sed "s# <appID2># $appID2# g" -i ../app/static/js/index.da425c07.js
-sed "s# <appID3># $appID3# g" -i ../app/static/js/index.da425c07.js
+sed "s#<api_url>#$api_url#g" -i ../app/static/js/index.da425c07.js
+sed "s#<appID1>#$appID1#g" -i ../app/static/js/index.da425c07.js
+sed "s#<appID2>#$appID2#g" -i ../app/static/js/index.da425c07.js
+sed "s#<appID3>#$appID3#g" -i ../app/static/js/index.da425c07.js
 # 配置sql文件
 echo "生成SQL文件..."
-sed "s# <appID1># $appID1# g" -i thinkvue.sql
-sed "s# <appID2># $appID2# g" -i thinkvue.sql
-sed "s# <appID3># $appID3# g" -i thinkvue.sql
-sed "s# <appsecret1># $appsecret1# g" -i thinkvue.sql
-sed "s# <appsecret2># $appsecret2# g" -i thinkvue.sql
-sed "s# <appsecret3># $appsecret3# g" -i thinkvue.sql
-sed "s# <smsbao_username># $smsbao_username# g" -i thinkvue.sql
-sed "s# <smsbao_password># $smsbao_password# g" -i thinkvue.sql
-sed "s# <smsbao_verify_sms_content># $smsbao_verify_sms_content# g" -i thinkvue.sql
-sed "s# <ali_accesskeyid># $ali_accesskeyid# g" -i thinkvue.sql
-sed "s# <ali_accesssecret># $ali_accesssecret# g" -i thinkvue.sql
-sed "s# <ali_signname># $ali_signname# g" -i thinkvue.sql
-sed "s# <ali_verify_templatecode># $ali_verify_templatecode# g" -i thinkvue.sql
-sed "s# <sms_interface_type># $sms_interface_type# g" -i thinkvue.sql
+sed "s#<appID1>#$appID1#g" -i ./thinkvue.sql
+sed "s#<appID2>#$appID2#g" -i ./thinkvue.sql
+sed "s#<appID3>#$appID3#g" -i ./thinkvue.sql
+sed "s#<appsecret1>#$appsecret1#g" -i ./thinkvue.sql
+sed "s#<appsecret2>#$appsecret2#g" -i ./thinkvue.sql
+sed "s#<appsecret3>#$appsecret3#g" -i ./thinkvue.sql
+sed "s#<wechat_template_id1>#$wechat_template_id1#g" -i ./thinkvue.sql
+sed "s#<wechat_template_id2>#$wechat_template_id2#g" -i ./thinkvue.sql
+sed "s#<wechat_template_id3>#$wechat_template_id3#g" -i ./thinkvue.sql
+sed "s#<smsbao_username>#$smsbao_username#g" -i ./thinkvue.sql
+sed "s#<smsbao_password>#$smsbao_password#g" -i ./thinkvue.sql
+sed "s#<smsbao_verify_sms_content>#$smsbao_verify_sms_content#g" -i ./thinkvue.sql
+sed "s#<ali_accesskeyid>#$ali_accesskeyid#g" -i ./thinkvue.sql
+sed "s#<ali_accesssecret>#$ali_accesssecret#g" -i ./thinkvue.sql
+sed "s#<ali_signname>#$ali_signname#g" -i ./thinkvue.sql
+sed "s#<ali_verify_templatecode>#$ali_verify_templatecode#g" -i ./thinkvue.sql
+sed "s#<sms_interface_type>#$sms_interface_type#g" -i ./thinkvue.sql
 # 导入SQL文件
 echo "导入SQL文件到MySQL数据库..."
 python3 test_db.py -a import test_db.py -H "$host" -O "$port" -U "$username" -P "$password" -D "$dbname" -F "thinkvue.sql"
@@ -421,3 +472,11 @@ chmod +x ./run.sh
 # crontab -l > conf && echo "1 */2 * * * $pathpy/run.sh >> $pathpy/run.log" >> conf && crontab conf && rm -f conf
 echo -e "\033[32m添加定时任务完成！\n \033[0m"
 echo -e "\033[32m安装完成\n \033[0m" 
+
+echo "================================"
+echo -e "\033[34m注意事项：\033[0m" 
+echo "================================"
+echo "1. 域名'${api_url}'根目录指向/www/wwwroot/thinkvue.wxmsg/，运行目录指向/www/wwwroot/thinkvue.wxmsg/public，伪静态设置为thinkphp；
+2. 域名'${wx_url}'根目录和运行目录都指向/www/wwwroot/thinkvue.wxmsg/app/，伪静态设置详见说明书；
+3. 安装完成后不可移动/www/wwwroot/thinkvue.wxmsg/目录。
+"

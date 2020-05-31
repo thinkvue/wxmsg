@@ -172,7 +172,7 @@ return [
     //调试模式-自动登录
     'debgu_auto_login'  => false,
     //版本
-    'version'           => '1.0.1',
+    'version'           => '1.0.4',
     //dd
     'LOGIN_SESSION_VALID'   => 3600,
 ];

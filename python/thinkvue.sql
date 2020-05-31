@@ -332,9 +332,9 @@ CREATE TABLE IF NOT EXISTS `tv_api_wechat_account` (
 ) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COMMENT='公众号信息（支持多公众号）';
 
 INSERT INTO `tv_api_wechat_account` (`id`, `username`, `appid`, `appsecret`, `access_token`, `token_time`, `status`, `delete_time`, `create_time`, `remark`) VALUES
-(1, 'ThinkVue', '<appid1>', '<appsecret1>', NULL, 0, 1, NULL, '2019-07-29 13:18:51', 'ThinkVue'),
-(2, 'bymidofa', '<appid2>', '<appsecret2>', NULL, 0, 1, NULL, '2019-07-30 12:18:53', '米多花科技'),
-(3, 'midofa_test', '<appid3>', '<appsecret3>', NULL, 0, 1, NULL, '2019-08-11 09:52:12', '测试号');
+(1, 'ThinkVue', '<appID1>', '<appsecret1>', NULL, 0, 1, NULL, '2019-07-29 13:18:51', 'ThinkVue'),
+(2, 'bymidofa', '<appID2>', '<appsecret2>', NULL, 0, 1, NULL, '2019-07-30 12:18:53', '米多花科技'),
+(3, 'midofa_test', '<appID3>', '<appsecret3>', NULL, 0, 1, NULL, '2019-08-11 09:52:12', '测试号');
 
 DROP TABLE IF EXISTS `tv_api_wechat_msg`;
 CREATE TABLE IF NOT EXISTS `tv_api_wechat_msg` (
@@ -393,7 +393,7 @@ INSERT INTO `tv_system_config` (`id`, `name`, `value`, `group`, `need_auth`, `re
 (3, 'LOGIN_SESSION_VALID', '7777', 0, 0, '登录过期时间（单位：秒)', NULL),
 (4, 'IDENTIFYING_CODE', '1', 0, 0, '验证方式，0为不验证，1为图片验证，2为短信验证', NULL),
 (5, 'LOGO_TYPE', '2', 0, 0, '显示LOGO类型，1为图片，2为文字', NULL),
-(6, 'APPID_WEIXIN', '<appid1>', 1, 1, '微信公众号appid', NULL),
+(6, 'APPID_WEIXIN', '<appID1>', 1, 1, '微信公众号appid', NULL),
 (7, 'SECRET_WEIXIN', '<appsecret1>', 1, 1, '微信公众号secret', NULL),
 (8, 'APPID_QQ', 'APPID_QQ', 1, 1, 'QQ appid', NULL),
 (9, 'SECRET_QQ', 'SECRET_QQ', 1, 1, 'QQ secret', NULL),

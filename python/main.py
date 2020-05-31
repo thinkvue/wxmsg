@@ -1,8 +1,8 @@
 """
  :Author: MiDoFa
  :Date: 2019-07-30 07:58:52
- :LastEditors: lijian@midofa.com
- :LastEditTime: 2020-05-03 20:29:29
+ :LastEditors: thinkvue@thinkvue.cn
+ :LastEditTime: 2020-05-30 23:50:35
  :Description: 项目描述
 """
 
@@ -84,7 +84,7 @@ def spider_list():
     db = Db_connect()
     msg=db.select_msg()
     err_count=0
-    max_error_num=setting.ini.get('system','max_error_num')
+    max_error_num=int(setting.ini.get('system','max_error_num',100))
     while True:
         if not msg:
             log.log_exception(20, "消息队列中没有数据。")

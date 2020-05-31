@@ -6,8 +6,8 @@
  :URL: http://midofa.com
  :Date: 2020-05-20 10:41:48
  :LastEditors: thinkvue@thinkvue.cn
- :LastEditTime: 2020-05-26 01:58:13
- :FilePath: \\midofa_wechat_msg\\test_db.py
+ :LastEditTime: 2020-05-30 20:53:24
+ :FilePath: \\python\\test_db.py
  :Description:  
 """
 
@@ -153,6 +153,7 @@ def __import_db(params):
     ret_dict = get(params_config, params,False)
     errcode = ret_dict.get('errcode')
     if errcode and errcode < 0:
+        print("\033[1;31m参数不正确\033[0m")
         sys.exit(131)
     try:
         ret_dict['data']['port'] = int(ret_dict.get('data').get('port'))
@@ -171,9 +172,10 @@ def __import_db(params):
         c.close()
         db.commit()
         db.close()                
+        print("\033[1;32m导入数据库操作成功！\033[0m")
         sys.exit(0)
     except Exception as e:
-        print("\033[1;31m数据库操作失败：\033[0m")
+        print("\033[1;31m导入数据库操作失败：\033[0m")
         print(e)
         c.close()
         db.commit()
@@ -388,6 +390,85 @@ def __test_wx(params):
         sys.exit(133)
 
 
+
+def __test_msg(params):
+    """测试短信接口
+
+     :return: 无返回值，测试结果通过控制台退出码获得。0为成功，非0为失败
+    """
+    params_config = {
+        'sms_interface_type':          {'must': True,  'data': True,    'short': 'I',    'long': 'interface'},
+        'mobile':           {'must': True,  'data': True,    'short': 'M',    'long': 'mobile'},
+        'ali_accesskeyid':  {'must': True,  'data': True,    'short': 'K',    'long': 'keyid'},
+        'ali_accesssecret': {'must': True,  'data': True,    'short': 'S',    'long': 'secret'},
+        'ali_signname':     {'must': True,  'data': True,    'short': 'N',    'long': 'signname'},
+        'ali_verify_templatecode':     {'must': True,  'data': True,    'short': 'T',    'long': 'template_id'},
+    }
+    ret_dict = get(params_config, params)
+    errcode = ret_dict.get('errcode')
+    if errcode and errcode < 0:
+        sys.exit(131)
+    try:
+        sms_interface_type=ret_dict.get('data').get('sms_interface_type')
+        mobile=ret_dict.get('data').get('mobile')
+        ali_accesskeyid=ret_dict.get('data').get('ali_accesskeyid')
+        ali_accesssecret=ret_dict.get('data').get('ali_accesssecret')
+        ali_signname=ret_dict.get('data').get('ali_signname')
+        ali_verify_templatecode=ret_dict.get('data').get('ali_verify_templatecode')
+        if sms_interface_type=="2":
+            import urllib
+            import urllib.request
+            import hashlib
+            statusStr = {
+                '0': '短信发送成功',
+                '-1': '参数不全',
+                '-2': '服务器空间不支持,请确认支持curl或者fsocket,联系您的空间商解决或者更换空间',
+                '30': '密码错误',
+                '40': '账号不存在',
+                '41': '余额不足',
+                '42': '账户已过期',
+                '43': 'IP地址限制',
+                '50': '内容含有敏感词'
+            }
+            smsapi = "http://api.smsbao.com/"
+            data = urllib.parse.urlencode({'u': ali_accesskeyid, 'p': ali_accesssecret, 'm': mobile, 'c': ali_signname})
+            send_url = smsapi + 'sms?' + data
+            response = urllib.request.urlopen(send_url)
+            the_page = response.read().decode('utf-8')
+            if the_page != "0":
+                print("\033[1;31m\n短信接口测试失败\n\033[0m")
+                print (statusStr[the_page])
+                sys.exit(131)
+        else:
+            from aliyunsdkcore.client import AcsClient
+            from aliyunsdkcore.request import CommonRequest
+            client = AcsClient(ali_accesskeyid, ali_accesssecret, 'cn-hangzhou')
+            request = CommonRequest()
+            request.set_accept_format('json')
+            request.set_domain('dysmsapi.aliyuncs.com')
+            request.set_method('POST')
+            request.set_protocol_type('https') # https | http
+            request.set_version('2017-05-25')
+            request.set_action_name('SendSms')
+            request.add_query_param('RegionId', "cn-hangzhou")
+            request.add_query_param('PhoneNumbers', mobile)
+            request.add_query_param('SignName', ali_signname)
+            request.add_query_param('TemplateCode', ali_verify_templatecode)
+            request.add_query_param('TemplateParam', "{\"code\":8888}")
+            response = client.do_action(request)
+            result=str(response, encoding = 'utf-8')
+            if result.find('"OK"') == -1 :
+                print("\033[1;31m\n短信接口测试失败\n\033[0m")
+                print(result)
+                sys.exit(131)
+        print("\033[1;32m\n短信接口测试成功\n\033[0m")
+        sys.exit(0)
+    except Exception as e:
+        print("\033[1;31m\n短信接口测试失败！\n\033[0m")
+        print(e)
+        sys.exit(131)
+
+
 def __test_mail(params):
     """测试发送邮件
 
@@ -446,3 +527,7 @@ if __name__ == "__main__":
         __test_wx(ret_dict.get('args'))
     elif(action == 'mail'):
         __test_mail(ret_dict.get('args'))
+    elif action == 'msg':
+        __test_msg(ret_dict.get('args'))
+    elif action == 'import':
+        __import_db(ret_dict.get('args'))
