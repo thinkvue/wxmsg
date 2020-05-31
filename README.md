@@ -57,12 +57,12 @@
 
 **一键安装**
 
-![效果图](./md/img/preview2.jpg)
+![一键安装效果图](./md/img/preview2.jpg)
 
 
 **运行效果**
 
-![效果图](./md/img/preview.jpg)
+![运行效果图](./md/img/preview.jpg)
 
 
 
