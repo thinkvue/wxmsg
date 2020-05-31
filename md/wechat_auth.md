@@ -13,5 +13,6 @@
 
 # 其他帮助链接
 
-- [如何设置微信公众号](./img/wechat_auth.md)
-- [如何设置微信公众号模版消息](./img/template_id.md)
+- [如何设置网站](./website.md)
+- [如何设置微信公众号](./wechat_auth.md)
+- [如何设置微信公众号模版消息](./template_id.md)

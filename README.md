@@ -48,9 +48,9 @@
 
 ## 安装后配置
 
-- [如何设置网站](./md/img/website.md)
-- [如何设置微信公众号](./md/img/wechat_auth.md)
-- [如何设置微信公众号模版消息](./md/img/template_id.md)
+- [如何设置网站](./md/website.md)
+- [如何设置微信公众号](./md/wechat_auth.md)
+- [如何设置微信公众号模版消息](./md/template_id.md)
 
 
 ## 效果图
