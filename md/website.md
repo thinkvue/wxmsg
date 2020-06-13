@@ -1,3 +1,12 @@
+<!--
+ * @Author: thinkvue@thinkvue.cn
+ * @URL: https://thinkvue.com
+ * @Date: 2020-05-31 02:35:17
+ * @LastEditors: thinkvue@thinkvue.cn
+ * @LastEditTime: 2020-06-02 19:54:39
+ * @FilePath: \\api.thinkvue.com\\md\\website.md
+ * @Description:  
+--> 
 
 # 设置API和前台网站
 
@@ -48,6 +57,11 @@ location / {
 **6. 登录微信公众号，点击左侧菜单【功能】→【自定义菜单】→点击【+】新建菜单，输入【菜单名称】，选择【跳转网页】，输入【页面地址】，如果开启了SSL则为【https://wx.thinkvue.cn/ 】，如果未开启SSL则为【http://wx.thinkvue.cn/ 】，点击【保存并发布】，菜单就生效了。**
 
 ![模版消息权限](./img/website6.png)
+
+
+**7. 开通SSL**
+
+![模版消息权限](./img/website7.png)
 
 
 # 其他帮助链接

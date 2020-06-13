@@ -1,8 +1,8 @@
 """
   # Author: MiDoFa
   # Date: 2019-07-23 10:23:22
- :LastEditors: lijian@midofa.com
- :LastEditTime: 2020-05-03 19:28:46
+ :LastEditors: thinkvue@thinkvue.cn
+ :LastEditTime: 2020-06-13 18:44:51
   # Description: 项目描述
 """
 # -*- coding: UTF-8 -*-
@@ -14,6 +14,7 @@
 import logging
 import requests
 import sys
+import os
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
@@ -48,7 +49,7 @@ def log_exception(error_level, msg, *args, **kwargs):
         print(msg)
     if error_level >= 40:
         sendMailToSelf(msg)
-        sys.exit(1)
+        os._exit(1)
 
 
 def sendMailToSelf(msg):

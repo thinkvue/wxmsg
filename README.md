@@ -76,5 +76,37 @@
 ![微信公众号ThinkVue](./md/img/thinkvue.jpg)
 
 
+# 目录结构
+```
+├─[application] Thinkphp应用目录
+├─[config] 		Thinkphp应用配置目录
+├─[extend]		扩展类库目录
+├─[public]		WEB目录（对外访问目录）
+├─[route]		路由定义目录
+├─[thinkphp]	Thinkphp框架系统目录
+├─[vendor]		第三方类库目录（Composer依赖库）
+├─[前台源码]	通过JBuilder打开
+├─[app]			前台网站WEB目录
+├─[python]		PYTHON服务
+│  │  config.ini	配置文件
+│  │  db_connect.py	数据库操作模块
+│  │  encoding.py	编码操作模块
+│  │  ini.py		读写INI模块
+│  │  install.sh	一键安装脚本
+│  │  log.py		日志模块
+│  │  main.py		主程序
+│  │  onlyone.py	确保唯一实例模块
+│  │  setting.py	加载设置模块
+│  │  test_db.py	安装测试连通模块
+│  └─ thinkvue.sql	SQL文件
+└─[md]				说明书文档			
+   │ template_id.md	微信公众号添加模版消息
+   │ website.md		设置API和前台网站
+   │ wechat_auth.md	微信公众号权限设置
+   └─[img]			图片目录
+
+```
+
+
 # 开源许可
 [MIT](./LICENSE.txt)

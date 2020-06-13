@@ -471,8 +471,9 @@ chmod +x ./run.sh
 # 启动python3后台服务 每两小时启动一次 程序中限制了唯一实例，因此不会重复运行 只是防止意外挂掉
 sudo yum install crontabs
 sudo /sbin/service crond start
-if [ ! -d "/var/spool/cron/root" ]; then
-  echo "" >/var/spool/cron/root
+if [ ! -d "/var/spool/cron/$USER" ]; then
+    mkdir /var/spool/cron/
+    echo "" >/var/spool/cron/$USER
 fi
 crontab -l > conf && echo "*/5 * * * * $pathpy/run.sh >> $pathpy/run.log" >> conf && crontab conf && rm -f conf
 echo -e "\033[32m添加定时任务完成！\n \033[0m"

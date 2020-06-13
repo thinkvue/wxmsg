@@ -5,9 +5,9 @@
  :Author: lijian@midofa.com
  :URL: http://midofa.com
  :Date: 2020-01-15 16:50:40
- :LastEditors: lijian@midofa.com
- :LastEditTime: 2020-02-03 16:14:59
- :FilePath: \\Test\\test.py
+ :LastEditors: thinkvue@thinkvue.cn
+ :LastEditTime: 2020-06-13 18:43:56
+ :FilePath: \\api.thinkvue.com\\python\\onlyone.py
  :Description: 唯一实例
 """
 
@@ -92,6 +92,6 @@ if __name__ == "__main__":
     print(1)
     # start()
     # print(2)
-    time.sleep(555)
+    time.sleep(5)
     print('over')
-    # os._exit(0)
+    os._exit(0)
